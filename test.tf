@@ -21,6 +21,13 @@ data "aws_vpc" "vpc-test" {
   id = "vpc-00bb4e7b1764e3235"
 }
 
+data "aws_subnet" "sub-test1" {
+  filter {
+    name = "tag:Name"
+    values = ["test-sub-a"]
+  }
+}
+
 resource "aws_subnet" "sub-test2" {
   vpc_id = data.aws_vpc.vpc-test.id
   availability_zone = "ap-northeast-2b"
@@ -168,4 +175,19 @@ resource "aws_security_group_rule" "k8s-sg-outbound" {
   protocol = -1
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
+}
+
+resource "aws_instance" "k8s-cont" {
+  ami = "ami-0ea5eb4b05645aa8a"
+  instance_type = "t3.small"
+  key_name = data.aws_key_pair.key.key_name
+  monitoring = true
+  availability_zone = "ap-northeast-2a"
+  subnet_id = data.aws_subnet.sub-test1.id
+  security_groups = aws_security_group.k8s-sg.id
+
+  tags = {
+    Name = "k8s_ec2_cont"
+    role = "cont_server"
+  }
 }
