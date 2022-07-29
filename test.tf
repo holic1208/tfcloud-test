@@ -66,7 +66,7 @@ resource "aws_security_group_rule" "k8s-sg-Bastion1" {
   from_port = 22
   to_port = 22
   protocol = "TCP"
-  cidr_blocks = "58.151.93.20/32"
+  cidr_blocks = ["58.151.93.20/32"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -76,7 +76,7 @@ resource "aws_security_group_rule" "k8s-sg-Bastion2" {
   from_port = 2022
   to_port = 2022
   protocol = "TCP"
-  cidr_blocks = "58.151.93.20/32"
+  cidr_blocks = ["58.151.93.20/32"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -86,7 +86,7 @@ resource "aws_security_group_rule" "k8s-sg-echo" {
   from_port = -1
   to_port = -1
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -96,7 +96,7 @@ resource "aws_security_group_rule" "k8s-sg-web" {
   from_port = 8080
   to_port = 8080
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -106,7 +106,7 @@ resource "aws_security_group_rule" "k8s-sg-k8s_Cni" {
   from_port = 6783
   to_port = 6783
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -116,7 +116,7 @@ resource "aws_security_group_rule" "k8s-sg-k8s_Api1" {
   from_port = 6443
   to_port = 6443
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -126,7 +126,7 @@ resource "aws_security_group_rule" "k8s-sg-k8s_Api2" {
   from_port = 10250
   to_port = 10250
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -136,7 +136,7 @@ resource "aws_security_group_rule" "k8s-sg-Api4" {
   from_port = 10257
   to_port = 10257
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -146,7 +146,7 @@ resource "aws_security_group_rule" "k8s-sg-Api3" {
   from_port = 10259
   to_port = 10259
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
@@ -156,15 +156,15 @@ resource "aws_security_group_rule" "k8s-sg-Nodeport" {
   from_port = 30000-32494
   to_port = 30000-32494
   protocol = "TCP"
-  cidr_blocks = "0.0.0.0/0"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
 
-resource "aws_security_group" "k8s-sg-outbound" {
+resource "aws_security_group_rule" "k8s-sg-outbound" {
   description = "outbound rule"
   type = "egress"
   from_port = 0
-  to_prot = 0
-  protocol = "all"
+  to_port = 0
+  protocol = -1
   security_group_id = data.aws_security_group.k8s-sg.id
 }
