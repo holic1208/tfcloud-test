@@ -83,9 +83,9 @@ resource "aws_security_group_rule" "k8s-sg-Bastion2" {
 resource "aws_security_group_rule" "k8s-sg-echo" {
   description = "ICMP"
   type = "ingress"
-  from_port = -1
-  to_port = -1
-  protocol = "TCP"
+  from_port = 0
+  to_port = 0
+  protocol = "-1"
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
@@ -153,8 +153,8 @@ resource "aws_security_group_rule" "k8s-sg-Api3" {
 resource "aws_security_group_rule" "k8s-sg-Nodeport" {
   description = "NodePort Port"
   type = "ingress"
-  from_port = 30000-32494
-  to_port = 30000-32494
+  from_port = 30000
+  to_port = 32494
   protocol = "TCP"
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
@@ -166,5 +166,6 @@ resource "aws_security_group_rule" "k8s-sg-outbound" {
   from_port = 0
   to_port = 0
   protocol = -1
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = data.aws_security_group.k8s-sg.id
 }
