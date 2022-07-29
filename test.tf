@@ -184,10 +184,96 @@ resource "aws_instance" "k8s-cont" {
   monitoring = true
   availability_zone = "ap-northeast-2a"
   subnet_id = data.aws_subnet.sub-test1.id
-  security_groups = aws_security_group.k8s-sg.id
+  security_groups = [data.aws_security_group.k8s-sg.id]
+  associate_public_ip_address = true
 
   tags = {
     Name = "k8s_ec2_cont"
     role = "cont_server"
+  }
+}
+
+resource "aws_instance" "k8s-node1" {
+  ami = "ami-0ea5eb4b05645aa8a"
+  instance_type = "t3.small"
+  key_name = data.aws_key_pair.key.key_name
+  monitoring = true
+  availability_zone = "ap-northeast-2a"
+  subnet_id = data.aws_subnet.sub-test1.id
+  security_groups = [data.aws_security_group.k8s-sg.id]
+  associate_public_ip_address = true
+
+  tags = {
+    Name = "k8s_ec2_node1"
+    role = "node_server"
+  }
+}
+
+resource "aws_instance" "k8s-node2" {
+  ami = "ami-0ea5eb4b05645aa8a"
+  instance_type = "t3.small"
+  key_name = data.aws_key_pair.key.key_name
+  monitoring = true
+  availability_zone = "ap-northeast-2a"
+  subnet_id = data.aws_subnet.sub-test1.id
+  security_groups = [data.aws_security_group.k8s-sg.id]
+  associate_public_ip_address = true
+  
+  tags = {
+    Name = "k8s_ec2_node2"
+    role = "node_server"
+  }
+}
+
+
+#######################################################
+## remote shell script                               ##
+#######################################################
+
+
+## control plane 
+resource "null_resource" "control_install" {
+
+  connection {
+    user = "ubuntu"
+    type = "ssh"
+    host = aws_instance.k8s-cont.public_ip
+    private_key = file("./aws_k8s_test.pem")
+    timeout = "5m"
+  }
+
+  provisioner "remote-exec" {
+    script = "./controlplane.sh"
+  }
+}
+
+## worker node1
+resource "null_resource" "node1_install" {
+
+  connection {
+    user = "ubuntu"
+    type = "ssh"
+    host = aws_instance.k8s-node1.public_ip
+    private_key = file("./aws_k8s_test.pem")
+    timeout = "5m"
+  }
+
+  provisioner "remote-exec" {
+    script = "./workernode.sh"
+  }
+}
+
+## worker node2
+resource "null_resource" "node2_install" {
+  connection {
+    user = "ubuntu"
+    type = "ssh"
+    host = aws_instance.k8s-node2.public_ip
+    private_key = file("./aws_k8s_test.pem")
+    timeout = "5m"
+  }
+
+  provisioner "remote-exec" {
+    script = "./workernode.sh"
   }
 }
