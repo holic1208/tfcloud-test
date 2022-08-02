@@ -259,7 +259,7 @@ resource "null_resource" "node1_install" {
   }
 
   provisioner "remote-exec" {
-    script = "./workernode.sh"
+    script = "./workernode1.sh"
   }
 }
 
@@ -274,6 +274,6 @@ resource "null_resource" "node2_install" {
   }
 
   provisioner "remote-exec" {
-    script = "./workernode.sh"
+    script = "./workernode2.sh"
   }
 }
