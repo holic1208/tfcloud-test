@@ -68,4 +68,5 @@ sudo apt-get install helm
 
 helm version --short
 kubectl get nodes
-cat /tmp/output
+source <(kubectl completion bash)
+echo "source <(kubectl completion bash)" >> ~/.bashrc
